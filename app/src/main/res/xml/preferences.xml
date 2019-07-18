@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="notifications"
+        app:title="notification" />
+
+    <SeekBarPreference
+        app:key="archive_deep"
+        android:title="@string/archive_deep"
+        app:showSeekBarValue="true"
+        android:max="30" />
+</androidx.preference.PreferenceScreen>

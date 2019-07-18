@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MesCleaner</string>
+    <string name="archive_deep">Deep of archive (days)</string>
 </resources>
