@@ -7,6 +7,15 @@ import android.os.IBinder
 import android.widget.Toast
 import java.io.File
 import android.net.Uri
+import android.os.Environment
+import java.util.*
+
+const val SECONDS = 1000L
+const val MINUTES = 60 * SECONDS
+const val HOURS = 60 * MINUTES
+const val DAYS = 24 * HOURS
+
+const val ARCHIVE_DEEP = 5 * DAYS
 
 class MyBinder (val servc:CleanerService) : Binder(){
     fun getService():CleanerService {
@@ -15,9 +24,8 @@ class MyBinder (val servc:CleanerService) : Binder(){
 }
 
 class CleanerService : Service() {
-
     private var dir = File("/")
-    var files = listOf<File>()
+    var files = mutableListOf<File>()
 
     private val binder: IBinder = MyBinder(this)
 
@@ -27,10 +35,25 @@ class CleanerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        var rootPath = Environment.getExternalStorageDirectory().absolutePath
+        val telegramPath = rootPath + "/Telegram"
+        dir = File(telegramPath)
         val list = dir.list()
-        val text = list[1].toString()
+        val text = list[0].toString()
+        addFiles(dir)
+        clearFiles()
         Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun clearFiles() {
+        for(f in files){
+            val curDate = Date().time
+            val fileDate = f.lastModified()
+            if(Date().time - f.lastModified() > ARCHIVE_DEEP){
+                f.delete()
+            }
+        }
     }
 
     fun addFiles(dir : File){
@@ -38,8 +61,12 @@ class CleanerService : Service() {
         if (dir.list().isEmpty()){
             return
         }
-        for(s in dir.list()){
-
+        for(s in dir.listFiles()){
+            if(s.isDirectory){
+                addFiles(s)
+            }else{
+                files.add(s)
+            }
         }
 
     }
