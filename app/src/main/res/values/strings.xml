@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MesCleaner</string>
     <string name="archive_deep">Deep of archive (days)</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

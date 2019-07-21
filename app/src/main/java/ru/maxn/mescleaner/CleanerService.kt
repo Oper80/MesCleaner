@@ -1,12 +1,14 @@
 package ru.maxn.mescleaner
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.widget.Toast
 import java.io.File
-import android.net.Uri
 import android.os.Environment
 import java.util.*
 
@@ -17,8 +19,10 @@ const val DAYS = 24 * HOURS
 
 const val ARCHIVE_DEEP = 5 * DAYS
 
-class MyBinder (val servc:CleanerService) : Binder(){
-    fun getService():CleanerService {
+const val INTERVAL = 1 * DAYS
+
+class MyBinder(val servc: CleanerService) : Binder() {
+    fun getService(): CleanerService {
         return servc
     }
 }
@@ -26,7 +30,6 @@ class MyBinder (val servc:CleanerService) : Binder(){
 class CleanerService : Service() {
     private var dir = File("/")
     var files = mutableListOf<File>()
-
     private val binder: IBinder = MyBinder(this)
 
     override fun onBind(intent: Intent): IBinder {
@@ -35,39 +38,46 @@ class CleanerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        var rootPath = Environment.getExternalStorageDirectory().absolutePath
-        val telegramPath = rootPath + "/Telegram"
+        val rootPath = Environment.getExternalStorageDirectory().absolutePath
+        val telegramPath = "$rootPath/Telegram"
         dir = File(telegramPath)
-        val list = dir.list()
-        val text = list[0].toString()
         addFiles(dir)
-        clearFiles()
+        val text = clearFiles().toString()
         Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+        scheduleService(applicationContext)
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun clearFiles() {
-        for(f in files){
-            val curDate = Date().time
-            val fileDate = f.lastModified()
-            if(Date().time - f.lastModified() > ARCHIVE_DEEP){
+    private fun clearFiles(): Int {
+        var count = 0
+        for (f in files) {
+            if (Date().time - f.lastModified() > ARCHIVE_DEEP) {
                 f.delete()
+                count++
+            }
+        }
+        return count
+    }
+
+    private fun addFiles(dir: File) {
+        if (dir.listFiles() != null) {
+            for (s in dir.listFiles()!!) {
+                if (s.isDirectory) {
+                    addFiles(s)
+                } else {
+                    files.add(s)
+                }
             }
         }
     }
 
-    fun addFiles(dir : File){
-
-        if (dir.list().isEmpty()){
-            return
+    companion object {
+        fun scheduleService(context: Context) {
+            val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val i = Intent(context, CleanerService::class.java)
+            val pi = PendingIntent.getService(context, 0, i, 0)
+            am.cancel(pi)
+            am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), INTERVAL, pi)
         }
-        for(s in dir.listFiles()){
-            if(s.isDirectory){
-                addFiles(s)
-            }else{
-                files.add(s)
-            }
-        }
-
     }
 }
