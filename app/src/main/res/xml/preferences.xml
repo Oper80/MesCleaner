@@ -15,7 +15,20 @@
             android:title="@string/archive_deep_telegram"
             app:key="archive_deep_telegram"
             app:showSeekBarValue="true" />
-
     </PreferenceCategory>
 
+    <PreferenceCategory
+            android:key="viber_settings"
+            android:title="Viber">
+        <SwitchPreferenceCompat
+                app:key="enable_viber"
+                app:title="Enable" />
+
+        <SeekBarPreference
+                android:max="30"
+
+                android:title="@string/archive_deep_viber"
+                app:key="archive_deep_viber"
+                app:showSeekBarValue="true" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

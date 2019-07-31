@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import android.content.pm.PackageManager
 import android.os.Environment
 import android.widget.Toast
@@ -13,10 +12,9 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.main_activity.*
 import java.io.File
-import java.util.*
 
-const val  MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
 
+const val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,22 +32,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
             // Permission is not granted
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE)
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+                )
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -60,8 +66,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            if (prefs.getBoolean("enable_telegram", false)){
+            if (prefs.getBoolean("enable_telegram", false)) {
                 clean("telegram")
+            }
+            if (prefs.getBoolean("enable_viber", false)) {
+                clean("viber")
             }
         }
         supportFragmentManager
@@ -70,20 +79,29 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun clean(res:String){
-        if(res=="telegram"){
+    fun clean(res: String) {
+        if (res == "telegram") {
             val rootPath = Environment.getExternalStorageDirectory().absolutePath
             val telegramPath = "$rootPath/Telegram"
             dir = File(telegramPath)
             addFiles(dir)
             val depth = prefs.getInt("archive_deep_telegram", 30)
-            val text = clearFiles(depth).toString()
+            val text = "Telegram ${clearFiles(depth)}"
+            Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+        }
+        if (res == "viber") {
+            val rootPath = Environment.getExternalStorageDirectory().absolutePath
+            val viberPath = "$rootPath/Viber"
+            dir = File(viberPath)
+            addFiles(dir)
+            val depth = prefs.getInt("archive_deep_viber", 30)
+            val text = "Viber ${clearFiles(depth)}"
             Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
         }
 
     }
 
-    private fun clearFiles(depth:Int): Int {
+    private fun clearFiles(depth: Int): Int {
         var count = 0
         for (f in files) {
             val diff = Utils.diffDays(f.lastModified())
