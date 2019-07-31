@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-        app:key="notifications"
-        app:title="notification" />
+    <PreferenceCategory
+        android:key="telegram_settings"
+        android:title="Telegram">
+        <SwitchPreferenceCompat
+            app:key="enable_telegram"
+            app:title="Enable" />
 
-    <SeekBarPreference
-        app:key="archive_deep"
-        android:title="@string/archive_deep"
-        app:showSeekBarValue="true"
-        android:max="30" />
+        <SeekBarPreference
+            android:max="30"
+
+            android:title="@string/archive_deep_telegram"
+            app:key="archive_deep_telegram"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

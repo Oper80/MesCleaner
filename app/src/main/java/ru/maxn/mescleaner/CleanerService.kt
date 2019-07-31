@@ -12,14 +12,8 @@ import java.io.File
 import android.os.Environment
 import java.util.*
 
-const val SECONDS = 1000L
-const val MINUTES = 60 * SECONDS
-const val HOURS = 60 * MINUTES
-const val DAYS = 24 * HOURS
-
-const val ARCHIVE_DEEP = 5 * DAYS
-
-const val INTERVAL = 1 * DAYS
+const val DEPTH = 10
+const val INTERVAL = 60000L
 
 class MyBinder(val servc: CleanerService) : Binder() {
     fun getService(): CleanerService {
@@ -42,16 +36,17 @@ class CleanerService : Service() {
         val telegramPath = "$rootPath/Telegram"
         dir = File(telegramPath)
         addFiles(dir)
-        val text = clearFiles().toString()
+        val text = clearFiles(DEPTH).toString()
         Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
         scheduleService(applicationContext)
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun clearFiles(): Int {
+    private fun clearFiles(depth:Int): Int {
         var count = 0
         for (f in files) {
-            if (Date().time - f.lastModified() > ARCHIVE_DEEP) {
+            val diff = Utils.diffDays(f.lastModified())
+            if (diff > depth) {
                 f.delete()
                 count++
             }
