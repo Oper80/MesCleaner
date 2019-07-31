@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private var dir = File("/")
     var files = mutableListOf<File>()
+    var countDeleted = 0
 
     private val prefs: SharedPreferences by lazy {
 
@@ -80,37 +81,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clean(res: String) {
+        val rootPath = Environment.getExternalStorageDirectory().absolutePath
         if (res == "telegram") {
-            val rootPath = Environment.getExternalStorageDirectory().absolutePath
-            val telegramPath = "$rootPath/Telegram"
-            dir = File(telegramPath)
+            val path = "$rootPath/Telegram"
+            dir = File(path)
             addFiles(dir)
             val depth = prefs.getInt("archive_deep_telegram", 30)
-            val text = "Telegram ${clearFiles(depth)}"
-            Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+            clearFiles(depth)
+            files.clear()
         }
         if (res == "viber") {
-            val rootPath = Environment.getExternalStorageDirectory().absolutePath
-            val viberPath = "$rootPath/Viber"
-            dir = File(viberPath)
+            val path = "$rootPath/Viber"
+            dir = File(path)
             addFiles(dir)
             val depth = prefs.getInt("archive_deep_viber", 30)
-            val text = "Viber ${clearFiles(depth)}"
-            Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+            clearFiles(depth)
+            files.clear()
         }
+        val text = "Deleted $countDeleted files"
+        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
 
     }
 
-    private fun clearFiles(depth: Int): Int {
-        var count = 0
+    private fun clearFiles(depth: Int){
         for (f in files) {
             val diff = Utils.diffDays(f.lastModified())
             if (diff > depth) {
                 f.delete()
-                count++
+                countDeleted++
             }
         }
-        return count
     }
 
     private fun addFiles(dir: File) {
