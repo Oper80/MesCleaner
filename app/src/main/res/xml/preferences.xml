@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <PreferenceCategory
-        android:key="telegram_settings"
-        android:title="Telegram">
+            android:key="telegram_settings"
+            android:title="Telegram">
         <SwitchPreferenceCompat
-            app:key="enable_telegram"
-            app:title="Enable" />
+                app:key="enable_telegram"
+                app:title="Enable"/>
+        <androidx.preference.PreferenceScreen
+                android:key="button_voicemail_category_key"
+                android:title="Settings"
+        >
 
-        <SeekBarPreference
-            android:max="30"
+            <SeekBarPreference
+                    android:max="30"
+                    android:title="@string/archive_deep_telegram"
+                    app:key="archive_deep_telegram"
+                    app:showSeekBarValue="true"/>
 
-            android:title="@string/archive_deep_telegram"
-            app:key="archive_deep_telegram"
-            app:showSeekBarValue="true" />
+        </androidx.preference.PreferenceScreen>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -22,13 +30,13 @@
             android:title="Viber">
         <SwitchPreferenceCompat
                 app:key="enable_viber"
-                app:title="Enable" />
+                app:title="Enable"/>
 
         <SeekBarPreference
                 android:max="30"
 
                 android:title="@string/archive_deep_viber"
                 app:key="archive_deep_viber"
-                app:showSeekBarValue="true" />
+                app:showSeekBarValue="true"/>
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

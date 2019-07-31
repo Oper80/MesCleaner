@@ -9,7 +9,9 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import kotlinx.android.synthetic.main.main_activity.*
 import java.io.File
 
@@ -17,7 +19,18 @@ import java.io.File
 const val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+    override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat?, pref: PreferenceScreen?): Boolean {
+        val ft = supportFragmentManager.beginTransaction()
+        val fragment = SettingsFragment()
+        val args = Bundle()
+        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref?.key)
+        fragment.arguments = args
+        ft.replace(R.id.settings_layout, fragment, pref?.key)
+        ft.addToBackStack(pref?.key)
+        ft.commit()
+        return true
+    }
 
 
     private var dir = File("/")
@@ -34,33 +47,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
 
         if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
             ) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
             } else {
-                // No explanation needed, we can request the permission.
+
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
                 )
 
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             // Permission has already been granted
@@ -74,13 +78,15 @@ class MainActivity : AppCompatActivity() {
                 clean("viber")
             }
         }
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.settings_layout, SettingsFragment())
-            .commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.settings_layout, SettingsFragment())
+                .commit()
+        }
     }
 
-    fun clean(res: String) {
+    private fun clean(res: String) {
         val rootPath = Environment.getExternalStorageDirectory().absolutePath
         if (res == "telegram") {
             val path = "$rootPath/Telegram"
@@ -103,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun clearFiles(depth: Int){
+    private fun clearFiles(depth: Int) {
         for (f in files) {
             val diff = Utils.diffDays(f.lastModified())
             if (diff > depth) {
