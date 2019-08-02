@@ -17,9 +17,22 @@
 
             <SeekBarPreference
                     android:max="30"
+
                     android:title="@string/archive_deep_telegram"
                     app:key="archive_deep_telegram"
                     app:showSeekBarValue="true"/>
+            <SwitchPreferenceCompat
+                    app:key="enable_telegram_video"
+                    app:title="Video"/>
+            <SwitchPreferenceCompat
+                    app:key="enable_telegram_images"
+                    app:title="Images"/>
+            <SwitchPreferenceCompat
+                    app:key="enable_telegram_audio"
+                    app:title="Audio"/>
+            <SwitchPreferenceCompat
+                    app:key="enable_telegram_doc"
+                    app:title="Documents"/>
 
         </androidx.preference.PreferenceScreen>
 

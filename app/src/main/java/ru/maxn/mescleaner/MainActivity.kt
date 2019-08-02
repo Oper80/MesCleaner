@@ -89,9 +89,27 @@ class MainActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceS
     private fun clean(res: String) {
         val rootPath = Environment.getExternalStorageDirectory().absolutePath
         if (res == "telegram") {
-            val path = "$rootPath/Telegram"
-            dir = File(path)
-            addFiles(dir)
+            if (prefs.getBoolean("enable_telegram_images", false)) {
+                val path = "$rootPath/Telegram/Telegram Images"
+                dir = File(path)
+                addFiles(dir)
+            }
+            if (prefs.getBoolean("enable_telegram_video", false)) {
+                val path = "$rootPath/Telegram/Telegram Video"
+                dir = File(path)
+                addFiles(dir)
+            }
+            if (prefs.getBoolean("enable_telegram_audio", false)) {
+                val path = "$rootPath/Telegram/Telegram Audio"
+                dir = File(path)
+                addFiles(dir)
+            }
+            if (prefs.getBoolean("enable_telegram_doc", false)) {
+                val path = "$rootPath/Telegram/Telegram Documents"
+                dir = File(path)
+                addFiles(dir)
+            }
+
             val depth = prefs.getInt("archive_deep_telegram", 30)
             clearFiles(depth)
             files.clear()
