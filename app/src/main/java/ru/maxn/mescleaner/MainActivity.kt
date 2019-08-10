@@ -1,6 +1,7 @@
 package ru.maxn.mescleaner
 
 import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -83,6 +84,10 @@ class MainActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceS
                 .beginTransaction()
                 .replace(R.id.settings_layout, SettingsFragment())
                 .commit()
+        }
+
+        schedule_btn.setOnClickListener {
+            startService(Intent(App.applicationContext(), CleanerService::class.java))
         }
     }
 

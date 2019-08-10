@@ -3,6 +3,7 @@ package ru.maxn.mescleaner
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -13,7 +14,7 @@ import android.os.Environment
 import java.util.*
 
 const val DEPTH = 10
-const val INTERVAL = 60000L
+const val INTERVAL = 86400000L
 
 class MyBinder(val servc: CleanerService) : Binder() {
     fun getService(): CleanerService {
@@ -27,7 +28,7 @@ class CleanerService : Service() {
     private val binder: IBinder = MyBinder(this)
 
     override fun onBind(intent: Intent): IBinder {
-        Toast.makeText(applicationContext, "I created", Toast.LENGTH_LONG).show()
+        Toast.makeText(App.applicationContext(), "I created", Toast.LENGTH_LONG).show()
         return binder
     }
 
@@ -37,8 +38,8 @@ class CleanerService : Service() {
         dir = File(telegramPath)
         addFiles(dir)
         val text = clearFiles(DEPTH).toString()
-        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
-        scheduleService(applicationContext)
+        Toast.makeText(App.applicationContext(), text, Toast.LENGTH_LONG).show()
+        scheduleService(App.applicationContext())
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -69,8 +70,8 @@ class CleanerService : Service() {
     companion object {
         fun scheduleService(context: Context) {
             val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val i = Intent(context, CleanerService::class.java)
-            val pi = PendingIntent.getService(context, 0, i, 0)
+            val i = Intent(context, AlarmReceiver::class.java)
+            val pi = PendingIntent.getBroadcast(context, 0, i, 0)
             am.cancel(pi)
             am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), INTERVAL, pi)
         }
