@@ -16,7 +16,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     internal fun applySchedule() {
-        mWorkManager.enqueue(PeriodicWorkRequest.Builder(CleanerWorker::class.java, 1, TimeUnit.DAYS).build())
+        mWorkManager.enqueue(PeriodicWorkRequest.Builder(CleanerWorker::class.java, 15, TimeUnit.MINUTES).build())
     }
 
     internal fun cancelAll() {

@@ -23,7 +23,8 @@
             android:layout_weight="1"
             app:layout_constraintTop_toBottomOf="@id/fab"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="8dp">
     </FrameLayout>
     <Button
             android:id="@+id/schedule_btn"
@@ -32,6 +33,25 @@
             app:layout_constraintTop_toBottomOf="@id/settings_layout"
             app:layout_constraintStart_toStartOf="parent"
             android:text="Schedule"
+            android:layout_margin="8dp"
+    />
+    <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/settings_layout"
+            app:layout_constraintStart_toEndOf="@id/schedule_btn"
+            android:text="Cancel"
+            android:layout_margin="8dp"
+    />
+    <Button
+            android:id="@+id/logs_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/settings_layout"
+            app:layout_constraintStart_toEndOf="@id/cancel_btn"
+            android:text="Logs"
+            android:layout_margin="8dp"
     />
 
 

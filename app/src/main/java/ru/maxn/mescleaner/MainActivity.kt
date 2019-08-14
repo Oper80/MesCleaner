@@ -15,9 +15,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import kotlinx.android.synthetic.main.main_activity.*
-import java.io.File
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+
 
 
 const val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0
@@ -45,6 +43,7 @@ class MainActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceS
 
         mViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
+
         checkPermissions()
 
         fab.setOnClickListener {
@@ -62,6 +61,15 @@ class MainActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceS
         schedule_btn.setOnClickListener {
             mViewModel.cancelAll()
             mViewModel.applySchedule()
+        }
+
+        logs_btn.setOnClickListener {
+            val intent = Intent(this, LogsActivity::class.java)
+            startActivity(intent)
+        }
+
+        cancel_btn.setOnClickListener {
+            mViewModel.cancelAll()
         }
     }
 

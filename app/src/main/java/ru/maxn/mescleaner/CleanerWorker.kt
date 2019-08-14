@@ -6,7 +6,13 @@ import android.os.Environment
 import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import ru.maxn.mescleaner.roomObjects.Log
+import ru.maxn.mescleaner.roomObjects.LogsDatabase
 import java.io.File
+import java.sql.Timestamp
+import java.util.*
+import org.jetbrains.anko.doAsync
+import ru.maxn.mescleaner.roomObjects.debugLog
 
 class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
@@ -15,8 +21,9 @@ class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worke
     }
 
     private var dir = File("/")
+    private lateinit var mDb: LogsDatabase
     var files = mutableListOf<File>()
-    var countDeleted = 0
+    var countDeleted: Int = 0
 
     private val prefs: SharedPreferences by lazy {
 
@@ -24,6 +31,15 @@ class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worke
     }
 
     override fun doWork(): Result {
+        mDb = LogsDatabase.getInstance(applicationContext)
+
+        //Debug info
+        val newDebugLog = debugLog(message = "doWork", time = Timestamp(Date().time).toString())
+        doAsync {
+            mDb.debugLogsDAO().insert(newDebugLog)
+        }
+        //Debug info
+
 
         if (prefs.getBoolean("enable_telegram", false)) {
             clean("telegram")
@@ -36,6 +52,12 @@ class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worke
     }
 
     private fun clean(res: String) {
+        //Debug info
+        val debugLog = debugLog(message = "clean", time = Timestamp(Date().time).toString())
+        doAsync {
+            mDb.debugLogsDAO().insert(debugLog)
+        }
+        //Debug info
         val rootPath = Environment.getExternalStorageDirectory().absolutePath
         if (res == "telegram") {
             if (prefs.getBoolean("enable_telegram_images", false)) {
@@ -69,6 +91,10 @@ class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worke
             val depth = prefs.getInt("archive_deep_viber", 30)
             deleteFiles(depth)
         }
+        val newLog = Log(deleted = countDeleted, timestamp = Timestamp(Date().time).toString())
+        doAsync {
+            mDb.logsDAO().insertLog(newLog)
+        }
         countDeleted = 0
     }
 
@@ -88,6 +114,14 @@ class CleanerWorker(appContext: Context, workerParams: WorkerParameters) : Worke
     }
 
     private fun addFiles(dir: File) {
+
+        //Debug info
+        val debugLog = debugLog(message = "addFiles", time = Timestamp(Date().time).toString())
+        doAsync {
+            mDb.debugLogsDAO().insert(debugLog)
+        }
+        //Debug info
+
         if (dir.listFiles() != null) {
             for (s in dir.listFiles()!!) {
                 if (s.isDirectory) {
