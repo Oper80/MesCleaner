@@ -6,18 +6,17 @@
 
     <PreferenceCategory
             android:key="telegram_settings"
-            android:title="Telegram">
+            android:title="Telegram"
+            android:icon="@drawable/telegram">
         <SwitchPreferenceCompat
                 app:key="enable_telegram"
                 app:title="Enable"/>
         <androidx.preference.PreferenceScreen
-                android:key="button_voicemail_category_key"
-                android:title="Settings"
-        >
+                android:key="button_telegram_settings_key"
+                android:title="Settings">
 
             <SeekBarPreference
                     android:max="30"
-
                     android:title="@string/archive_deep_telegram"
                     app:key="archive_deep_telegram"
                     app:showSeekBarValue="true"/>
@@ -40,7 +39,8 @@
 
     <PreferenceCategory
             android:key="viber_settings"
-            android:title="Viber">
+            android:title="Viber"
+            android:icon="@drawable/viber">
         <SwitchPreferenceCompat
                 app:key="enable_viber"
                 app:title="Enable"/>
