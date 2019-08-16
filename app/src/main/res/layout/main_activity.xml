@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/settings_layout"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Schedule"
+            android:text="@string/schedule"
             android:visibility="gone"
             android:layout_margin="8dp"
     />
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/settings_layout"
             app:layout_constraintStart_toEndOf="@id/schedule_btn"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:visibility="gone"
             android:layout_margin="8dp"
     />
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/settings_layout"
             app:layout_constraintStart_toEndOf="@id/cancel_btn"
-            android:text="Logs"
+            android:text="@string/logs"
             android:layout_margin="8dp"
     />
 

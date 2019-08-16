@@ -10,10 +10,10 @@
             android:icon="@drawable/telegram">
         <SwitchPreferenceCompat
                 app:key="enable_telegram"
-                app:title="Enable"/>
+                app:title="@string/enable"/>
         <androidx.preference.PreferenceScreen
                 android:key="button_telegram_settings_key"
-                android:title="Settings">
+                android:title="@string/settings">
 
             <SeekBarPreference
                     android:max="30"
@@ -43,13 +43,15 @@
             android:icon="@drawable/viber">
         <SwitchPreferenceCompat
                 app:key="enable_viber"
-                app:title="Enable"/>
-
-        <SeekBarPreference
-                android:max="30"
-
-                android:title="@string/archive_deep_viber"
-                app:key="archive_deep_viber"
-                app:showSeekBarValue="true"/>
+                app:title="@string/enable"/>
+        <androidx.preference.PreferenceScreen
+                android:key="button_viber_settings_key"
+                android:title="@string/settings">
+            <SeekBarPreference
+                    android:max="30"
+                    android:title="@string/archive_deep_viber"
+                    app:key="archive_deep_viber"
+                    app:showSeekBarValue="true"/>
+        </androidx.preference.PreferenceScreen>
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>
